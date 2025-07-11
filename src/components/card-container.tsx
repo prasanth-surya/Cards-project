@@ -1,14 +1,37 @@
 "use client";
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import axios from "axios";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, easeIn, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AddCardDialog from "./add-card-dialog";
 import CardComponent from "./card-ui-component";
 
+const blastVariants = {
+  exit: {
+    opacity: 0,
+    scale: 1.4,
+    rotate: 25,
+    filter: "blur(4px)",
+    transition: {
+      duration: 0.3,
+      ease: easeIn,
+    },
+  },
+  initial: { opacity: 0, scale: 0.9, rotate: -10 },
+  animate: { opacity: 1, scale: 1, rotate: 0 },
+};
+
+interface card {
+  id: string;
+  name: string;
+  manufacturer: string;
+  price: string;
+  createdAt: string;
+}
+
 export default function CardsContainer() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<card[]>([]);
   const [openAddDialog, setOpenAddDialog] = useState(false);
 
   const handleClickOpen = () => {
@@ -50,6 +73,8 @@ export default function CardsContainer() {
     getCardsData();
   }, []);
 
+  console.log(data, "data");
+
   return (
     <Box sx={{ py: "20px" }}>
       <Stack
@@ -75,7 +100,20 @@ export default function CardsContainer() {
         <AnimatePresence>
           {data &&
             data.map((card) => (
-              <CardComponent card={card} handleDeleteCard={handleDeleteCard} />
+              <Grid key={card.id} size={{ xs: 12, sm: 6, md: 3, lg: 3 }}>
+                <motion.div
+                  layout
+                  variants={blastVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                >
+                  <CardComponent
+                    card={card}
+                    handleDeleteCard={handleDeleteCard}
+                  />
+                </motion.div>
+              </Grid>
             ))}
         </AnimatePresence>
       </Grid>
