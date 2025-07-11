@@ -16,6 +16,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
 import { motion, AnimatePresence } from "framer-motion";
 import AddCardDialog from "./add-card-dialog";
+import { toast } from "react-toastify";
 
 const blastVariants = {
   exit: {
@@ -24,7 +25,7 @@ const blastVariants = {
     rotate: 25,
     filter: "blur(4px)",
     transition: {
-      duration: 0.5,
+      duration: 0.3,
       ease: "easeIn",
     },
   },
@@ -48,7 +49,8 @@ export default function CardsContainer() {
     await axios
       .get("https://6870c6567ca4d06b34b7ee6a.mockapi.io/Cards")
       .then((res) => {
-        setData(res.data);
+        const sorted = res.data.sort((a, b) => Number(b.id) - Number(a.id));
+        setData(sorted);
       })
       .catch((err) => {
         console.log(err);
@@ -60,6 +62,7 @@ export default function CardsContainer() {
       .delete(`https://6870c6567ca4d06b34b7ee6a.mockapi.io/Cards/${cardId}`)
       .then((res) => {
         getCardsData();
+        toast.success("Successfully Deleted");
       })
       .catch((err) => {
         console.log(err);
@@ -71,16 +74,23 @@ export default function CardsContainer() {
   }, []);
 
   return (
-    <Box sx={{ my: "20px" }}>
+    <Box sx={{ py: "20px" }}>
       <Stack
         direction={"row"}
         justifyContent={"space-between"}
-        sx={{ my: "20px" }}
+        sx={{ py: "20px" }}
       >
-        <Typography sx={{ fontSize: "18px", fontWeight: 500 }}>
+        <Typography
+          sx={{ fontSize: "18px", fontWeight: 500, color: "#fffde4" }}
+        >
           Vehicle Gallery
         </Typography>
-        <Button variant="contained" size="small" onClick={handleClickOpen}>
+        <Button
+          variant="contained"
+          size="small"
+          onClick={handleClickOpen}
+          sx={{ backgroundColor: "#005aa7" }}
+        >
           Add
         </Button>
       </Stack>
@@ -96,7 +106,7 @@ export default function CardsContainer() {
                   animate="animate"
                   exit="exit"
                 >
-                  <Card sx={{ padding: 2, backgroundColor: "ivory" }}>
+                  <Card sx={{ padding: 2, backgroundColor: "#FAF6E9" }}>
                     <Stack
                       direction={"row"}
                       alignItems={"center"}
@@ -122,9 +132,7 @@ export default function CardsContainer() {
                       justifyContent={"space-between"}
                       alignItems={"center"}
                     >
-                      <Typography>
-                        {dayjs(card?.createdAt).format("ddd MMM hh:mm a")}
-                      </Typography>
+                      <Typography>{card?.name}</Typography>
 
                       <IconButton onClick={() => handleDeleteCard(card?.id)}>
                         <DeleteIcon

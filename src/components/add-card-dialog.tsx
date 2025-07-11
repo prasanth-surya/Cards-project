@@ -15,6 +15,7 @@ import {
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function AddCardDialog({ open, handleClose, getCardsData }) {
   const [name, setName] = useState("");
@@ -35,8 +36,12 @@ export default function AddCardDialog({ open, handleClose, getCardsData }) {
         price: price,
       })
       .then((res) => {
+        console.log(res, "res");
         getCardsData();
         handleClose();
+        toast.success("Successfully Added New Card");
+        setName("");
+        setPrice("");
       })
       .catch((err) => {
         console.log(err);
@@ -66,7 +71,7 @@ export default function AddCardDialog({ open, handleClose, getCardsData }) {
             id="outlined-controlled"
             label="Vehicle Name"
             value={name}
-            sx={{ minWidth: "300px" }}
+            sx={{ minWidth: "260px" }}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               setName(event.target.value);
             }}
