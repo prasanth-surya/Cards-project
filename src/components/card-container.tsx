@@ -1,5 +1,13 @@
 "use client";
-import { Box, Button, Grid, Stack, Typography } from "@mui/material";
+
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 import { AnimatePresence, easeIn, motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -73,8 +81,6 @@ export default function CardsContainer() {
     getCardsData();
   }, []);
 
-  console.log(data, "data");
-
   return (
     <Box sx={{ py: "20px" }}>
       <Stack
@@ -96,9 +102,10 @@ export default function CardsContainer() {
           Add
         </Button>
       </Stack>
+
       <Grid container spacing={2}>
         <AnimatePresence>
-          {data &&
+          {data.length > 0 ? (
             data.map((card) => (
               <Grid key={card.id} size={{ xs: 12, sm: 6, md: 3, lg: 3 }}>
                 <motion.div
@@ -114,7 +121,22 @@ export default function CardsContainer() {
                   />
                 </motion.div>
               </Grid>
-            ))}
+            ))
+          ) : (
+            <Grid size={{ xs: 12 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  minHeight: "200px",
+                  width: "100%",
+                }}
+              >
+                <CircularProgress sx={{ color: "#fffde4" }} />
+              </Box>
+            </Grid>
+          )}
         </AnimatePresence>
       </Grid>
       <AddCardDialog

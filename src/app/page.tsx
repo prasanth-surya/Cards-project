@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import NextLink from "next/link";
 import CardsContainer from "@/components/card-container";
+import { CircularProgress } from "@mui/material";
 
 export default function Home() {
   return (
@@ -13,7 +14,6 @@ export default function Home() {
       sx={{
         background: "linear-gradient(to right, #005aa7, #fffde4)",
         minHeight: "100vh",
-        height: "100%",
       }}
     >
       <CardsContainer />

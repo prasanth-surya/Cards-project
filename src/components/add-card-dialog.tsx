@@ -33,10 +33,14 @@ export default function AddCardDialog({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    // Only allow numeric and up to 5 digits
     if (/^\d{0,5}$/.test(val)) {
       setPrice(val);
     }
+  };
+
+  const handleResetData = () => {
+    setName("");
+    setPrice("");
   };
 
   const handlePostNewCard = async () => {
@@ -46,12 +50,10 @@ export default function AddCardDialog({
         price: price,
       })
       .then((res) => {
-        console.log(res, "res");
         getCardsData();
         handleClose();
         toast.success("Successfully Added New Card");
-        setName("");
-        setPrice("");
+        handleResetData();
       })
       .catch((err) => {
         console.log(err);
