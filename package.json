@@ -16,9 +16,13 @@
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
     "axios": "^1.10.0",
+    "dayjs": "^1.11.13",
+    "framer-motion": "^12.23.3",
     "next": "^15.0.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-toastify": "^11.0.5",
+    "toastify": "^2.0.1"
   },
   "devDependencies": {
     "@types/node": "latest",

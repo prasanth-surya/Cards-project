@@ -4,8 +4,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import theme from "@/theme";
-import ModeSwitch from "@/components/ModeSwitch";
-import AppBar from "@/components/appbarComponent";
+import { ToastContainer } from "react-toastify";
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
@@ -16,9 +15,19 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           <ThemeProvider theme={theme}>
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
-            {/* <ModeSwitch /> */}
 
             {props.children}
+            <ToastContainer
+              position="top-center"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick={false}
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              theme="light"
+            />
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
