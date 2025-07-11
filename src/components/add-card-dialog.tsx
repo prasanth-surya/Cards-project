@@ -17,11 +17,21 @@ import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export default function AddCardDialog({ open, handleClose, getCardsData }) {
+interface AddCardDialogProps {
+  open: boolean;
+  handleClose: () => void;
+  getCardsData: () => void;
+}
+
+export default function AddCardDialog({
+  open,
+  handleClose,
+  getCardsData,
+}: AddCardDialogProps) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     // Only allow numeric and up to 5 digits
     if (/^\d{0,5}$/.test(val)) {
@@ -87,10 +97,12 @@ export default function AddCardDialog({ open, handleClose, getCardsData }) {
             onChange={handleChange}
             slotProps={{
               input: {
+                inputProps: {
+                  maxLength: 5,
+                },
                 startAdornment: (
                   <InputAdornment position="start">$</InputAdornment>
                 ),
-                maxLength: 4,
               },
             }}
           />
