@@ -1,0 +1,16 @@
+import * as React from "react";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import NextLink from "next/link";
+import AppBarComponent from "@/components/appbarComponent";
+
+export default function Home() {
+  return (
+    <>
+      <AppBarComponent />
+      <Container maxWidth="lg">Cards list</Container>
+    </>
+  );
+}
