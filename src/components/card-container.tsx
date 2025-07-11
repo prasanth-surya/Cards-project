@@ -1,19 +1,65 @@
 "use client";
-import { Box, Card, Grid, IconButton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import CardComponent from "./cardComponent";
 import Image from "next/image";
 import DeleteIcon from "@mui/icons-material/Delete";
+import dayjs from "dayjs";
+import { motion, AnimatePresence } from "framer-motion";
+import AddCardDialog from "./add-card-dialog";
+
+const blastVariants = {
+  exit: {
+    opacity: 0,
+    scale: 1.4,
+    rotate: 25,
+    filter: "blur(4px)",
+    transition: {
+      duration: 0.5,
+      ease: "easeIn",
+    },
+  },
+  initial: { opacity: 0, scale: 0.9, rotate: -10 },
+  animate: { opacity: 1, scale: 1, rotate: 0 },
+};
 
 export default function CardsContainer() {
   const [data, setData] = useState([]);
+  const [openAddDialog, setOpenAddDialog] = useState(false);
 
-  const getRecipes = async () => {
+  const handleClickOpen = () => {
+    setOpenAddDialog(true);
+  };
+
+  const handleClose = () => {
+    setOpenAddDialog(false);
+  };
+
+  const getCardsData = async () => {
     await axios
-      .get("https://dummyjson.com/recipes")
+      .get("https://6870c6567ca4d06b34b7ee6a.mockapi.io/Cards")
       .then((res) => {
-        setData(res.data.recipes);
+        setData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleDeleteCard = async (cardId) => {
+    await axios
+      .delete(`https://6870c6567ca4d06b34b7ee6a.mockapi.io/Cards/${cardId}`)
+      .then((res) => {
+        getCardsData();
       })
       .catch((err) => {
         console.log(err);
@@ -21,48 +67,87 @@ export default function CardsContainer() {
   };
 
   useEffect(() => {
-    getRecipes();
+    getCardsData();
   }, []);
 
   return (
-    <Box>
+    <Box sx={{ my: "20px" }}>
+      <Stack
+        direction={"row"}
+        justifyContent={"space-between"}
+        sx={{ my: "20px" }}
+      >
+        <Typography sx={{ fontSize: "18px", fontWeight: 500 }}>
+          Vehicle Gallery
+        </Typography>
+        <Button variant="contained" size="small" onClick={handleClickOpen}>
+          Add
+        </Button>
+      </Stack>
       <Grid container spacing={2}>
-        {data &&
-          data.map((recipe) => {
-            return (
-              <Grid key={recipe.id} size={{ xs: 12, sm: 6, md: 3, lg: 3 }}>
-                <Card sx={{ padding: 2 }}>
-                  <Image
-                    alt={recipe?.name}
-                    src={recipe?.image}
-                    width={0}
-                    height={0}
-                    sizes="100vw"
-                    style={{ width: "100%", height: "200px" }}
-                  />
-
-                  <Stack
-                    direction={"row"}
-                    justifyContent={"space-between"}
-                    alignItems={"center"}
-                  >
-                    <Typography>{recipe?.name}</Typography>
-                    <IconButton>
-                      <DeleteIcon
+        <AnimatePresence>
+          {data &&
+            data.map((card) => (
+              <Grid item key={card.id} size={{ xs: 12, sm: 6, md: 3, lg: 3 }}>
+                <motion.div
+                  layout
+                  variants={blastVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                >
+                  <Card sx={{ padding: 2, backgroundColor: "ivory" }}>
+                    <Stack
+                      direction={"row"}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                    >
+                      <Typography
                         sx={{
                           fontSize: "18px",
-                          opacity: 0.6,
-                          ":hover": { opacity: 1 },
+                          fontWeight: 500,
+                          maxWidth: "160px",
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                          whiteSpace: "nowrap",
                         }}
-                        color="error"
-                      />
-                    </IconButton>
-                  </Stack>
-                </Card>
+                      >
+                        {card?.manufacturer}
+                      </Typography>
+                      <Typography>${card?.price}</Typography>
+                    </Stack>
+
+                    <Stack
+                      direction={"row"}
+                      justifyContent={"space-between"}
+                      alignItems={"center"}
+                    >
+                      <Typography>
+                        {dayjs(card?.createdAt).format("ddd MMM hh:mm a")}
+                      </Typography>
+
+                      <IconButton onClick={() => handleDeleteCard(card?.id)}>
+                        <DeleteIcon
+                          sx={{
+                            fontSize: "18px",
+                            opacity: 0.6,
+                            ":hover": { opacity: 1 },
+                          }}
+                          color="error"
+                        />
+                      </IconButton>
+                    </Stack>
+                  </Card>
+                </motion.div>
               </Grid>
-            );
-          })}
+            ))}
+        </AnimatePresence>
       </Grid>
+      <AddCardDialog
+        open={openAddDialog}
+        handleClose={handleClose}
+        getCardsData={getCardsData}
+      />
     </Box>
   );
 }

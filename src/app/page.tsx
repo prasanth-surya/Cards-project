@@ -12,9 +12,6 @@ export default function Home() {
     <>
       <AppBarComponent />
       <Container maxWidth="lg">
-        <Typography sx={{ fontSize: "18px", fontWeight: 500, mt: "10px" }}>
-          Hola! Your favourite recipe book
-        </Typography>
         <CardsContainer />
       </Container>
     </>
